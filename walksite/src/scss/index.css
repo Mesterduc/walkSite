@@ -3,7 +3,7 @@
 }
 
 .table {
-  border: solid 1px black;
+  padding: 5px;
 }
 
 .table-container {
@@ -21,6 +21,8 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  font-weight: 800;
+  text-transform: capitalize;
 }
 
 .table_col-header {
@@ -30,6 +32,8 @@
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
 .table_worker {
@@ -37,13 +41,27 @@
   display: grid;
   -ms-grid-columns: (1fr)[2];
       grid-template-columns: repeat(2, 1fr);
+  border-bottom: solid 1px black;
 }
 
 .table_worker-name {
+  text-transform: capitalize;
   margin-left: 10px;
 }
 
 .table_worker-antal {
-  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+* {
+  font-family: 'Poppins', sans-serif;
 }
 /*# sourceMappingURL=index.css.map */
