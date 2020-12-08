@@ -1,0 +1,29 @@
+.table {
+	&-container {
+		display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 15px;
+    }
+    
+	border: solid 1px black;
+
+	&_header {
+		display: flex;
+		justify-content: center;
+	}
+	&_col-header {
+		display: flex;
+		justify-content: space-evenly;
+    }
+    &_worker{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        
+        &-name{
+           margin-left: 10px; 
+        }
+        &-antal{
+            text-align: center;
+        }
+    }
+}
