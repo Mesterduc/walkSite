@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
   new Afdeling({
     _id: new mongoose.Types.ObjectId(),
     navn: req.body.navn,
-    medarbejder: {},
+    // medarbejder: {_id: ["he"]},
   }))
   res.status(201).send("virker")
 })

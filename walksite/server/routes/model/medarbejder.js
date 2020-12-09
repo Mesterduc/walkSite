@@ -1,12 +1,13 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const Afdeling = require('./afdeling')
 
 const medarbejder = new Schema({
   _id: Schema.Types.ObjectId,
-  navn: {String, required: true},
+  navn: {type: String, required: true},
   antal: Number,
   antalAlo: Number,
-  afdeling: { type: Schema.Types.ObjectId, ref: "Afdeling"}
+  afdeling: { type: mongoose.Schema.Types.ObjectId, ref: "Afdeling"}
 })
 
 module.exports = mongoose.model("Medarbejder", medarbejder)
