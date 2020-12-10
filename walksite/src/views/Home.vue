@@ -7,10 +7,12 @@
           <span>navn</span>
           <span>antal</span>
         </div>
-        <div class="table_worker" v-for="medA in findMedarbejder(afd._id)" :key="medA._id">
-          <span class="table_worker-name" >{{
-            medA.navn
-          }}</span>
+        <div
+          class="table_worker"
+          v-for="medA in findMedarbejder(afd._id)"
+          :key="medA._id"
+        >
+          <span class="table_worker-name">{{ medA.navn }}</span>
         </div>
       </div>
     </section>
@@ -35,17 +37,17 @@ export default {
         if (id == e.afdeling) {
           arr.push(e);
         }
-			});
-			return arr
+      });
+      return arr;
     },
   },
-  mounted() {
-    axios.get("http://localhost:5000/afdeling").then((res) => {
+  async mounted() {
+    await axios.get("http://localhost:5000/afdeling").then((res) => {
       this.afdeling = res.data;
     }),
-      axios.get("http://localhost:5000/medarbejder").then((res) => {
-        this.medarbejder = res.data;
-      });
+    await axios.get("http://localhost:5000/medarbejder").then((res) => {
+      this.medarbejder = res.data;
+    });
   },
   components: {},
 };

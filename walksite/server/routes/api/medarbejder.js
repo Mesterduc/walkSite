@@ -22,14 +22,14 @@ router.post('/', async (req, res) => {
     antal: 0,
     afdeling: req.body.afdeling,
   }))
-  res.status(201).send("virker")
+  res.status(201)
 })
 
 // Delete
 router.delete('/:id', async (req, res) => {
   const afdeling = await loadMedarbejder()
   await afdeling.deleteOne({_id: new mongodb.ObjectID(req.params.id)})
-  res.status(200).send()
+  res.status(200)
 })
 
 
