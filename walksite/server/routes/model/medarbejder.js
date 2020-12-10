@@ -7,7 +7,7 @@ const medarbejder = new Schema({
   navn: {type: String, required: true},
   antal: Number,
   antalAlo: Number,
-  afdeling: { type: mongoose.Schema.Types.ObjectId, ref: "Afdeling"}
+  afdeling: { type: mongoose.Schema.Types.ObjectId, ref: "Afdeling", required: true}
 })
 
 module.exports = mongoose.model("Medarbejder", medarbejder)

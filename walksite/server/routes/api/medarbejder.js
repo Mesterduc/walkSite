@@ -15,24 +15,38 @@ router.get('/', async (req, res) => {
 // Post
 router.post('/', async (req, res) => {
   const afdeling = await loadMedarbejder()
-  await afdeling.insertOne(
-  new Medarbejder({
-    _id: new mongoose.Types.ObjectId(),
-    navn: req.body.navn,
-    antal: 0,
-    afdeling: req.body.afdeling,
-  }))
-  res.status(201)
+  // await medarbejder.find({}).toArray().then((e) => {
+  //   let antal = 0
+    
+  //   e.forEach(x => {
+  //     x.antalAlo += antal
+  //   });
+  //   let tal = antal / e.length
+  // })
+  await afdeling
+    .insertOne(
+       new Medarbejder({
+        _id: new mongoose.Types.ObjectId(),
+        navn: req.body.navn,
+        antal: 0,
+        antalAlo: 4,
+        afdeling: req.body.afdeling,
+      })
+    )
+    .then(() => {
+      res.status(201).send("virker")
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 })
 
 // Delete
 router.delete('/:id', async (req, res) => {
   const afdeling = await loadMedarbejder()
-  await afdeling.deleteOne({_id: new mongodb.ObjectID(req.params.id)})
-  res.status(200)
+  await afdeling.deleteOne({ _id: new mongodb.ObjectID(req.params.id) })
+  res.status(200).send('slettet')
 })
-
-
 
 async function loadMedarbejder() {
   const client = await mongodb.MongoClient.connect(config.database, {

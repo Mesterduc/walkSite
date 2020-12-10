@@ -1,0 +1,27 @@
+.data {
+  .opret {
+    .medarbejder {
+      margin-bottom: 20px;
+
+      &_header {
+        font-weight: 600;
+      }
+      &_button{
+        margin-left: 10px;
+      }
+      &_dropdown {
+        margin-left: 10px;
+      }
+
+    }
+
+    .afdeling {
+      &_header {
+        font-weight: 600;
+      }
+      &_button{
+        margin-left: 10px;
+      }
+    }
+  }
+}

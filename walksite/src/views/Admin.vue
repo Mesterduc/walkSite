@@ -24,7 +24,7 @@
               {{afd.navn}}
               </option>
           </select>
-          <input class="medarbejder_button" type="submit" value="Opret">
+          <input  class="medarbejder_button" type="submit" value="Opret">
         </form>
       </section>
       <section class="afdeling">
@@ -43,10 +43,13 @@
         </div>
       </section>
     </section>
-  </div>
+     <afdelingMedarbejder />
+ <!-- v-bind:afdelingS="afdelingS" v-bind:medarbejderS="afdelingS"  -->
+ </div>
 </template>
 <script>
 import axios from "axios";
+import afdelingMedarbejder from '../components/afdMeda'
 
 export default {
   name: "Home",
@@ -73,17 +76,20 @@ export default {
       if (this.medarbejder.afdeling == null) {
         this.errors.push("Medarbejder mangler afdeling");
       }
-      if (!this.errors) {
+      if (this.errors.length == 0) {
+        
         axios
           .post("http://localhost:5000/medarbejder", this.medarbejder)
           .then((resultat) => {
             console.log(resultat);
+            this.$store.dispatch('getMedarbejder')
           })
           .catch((err) => {
             console.log(err);
           });
         this.medarbejder.navn = null;
         this.medarbejder.afdeling = null;
+
       }
 
       e.preventDefault();
@@ -96,6 +102,8 @@ export default {
           .post("http://localhost:5000/afdeling", this.afdeling)
           .then((resultat) => {
             console.log(resultat);
+            // location.reload();
+            this.$store.dispatch('getAfdeling')
           })
           .catch((err) => {
             console.log(err);
@@ -104,6 +112,7 @@ export default {
       } else {
         this.errors.push("Navn er tomt");
       }
+      
       e.preventDefault();
     },
   },
@@ -115,6 +124,8 @@ export default {
         this.medarbejderS = res.data;
       });
   },
-  components: {},
+  components: {
+    afdelingMedarbejder
+  },
 };
 </script>
