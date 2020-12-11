@@ -28,15 +28,13 @@ export default new Vuex.Store({
         .then(afdeling => {
         commit('setAfdeling', afdeling)
         })
-      // .then((res) => {
-      //   commit('setAfdeling', res.data)
-      // })
     },
     getMedarbejder({ commit }) {
       axios.get('http://localhost:5000/medarbejder').then((res) => {
         commit('setMedarbejder', res.data)
       })
     },
+    
   },
   modules: {},
 })

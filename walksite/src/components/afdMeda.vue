@@ -34,7 +34,7 @@ export default {
   computed: {
     ...mapState(["afdeling", "medarbejder"]),
   },
-  methods: {
+   methods: {
     findMedarbejder: function (id) {
       let arr = [];
       this.medarbejder.forEach((e) => {

@@ -14,37 +14,43 @@ router.get('/', async (req, res) => {
 
 // Post
 router.post('/', async (req, res) => {
-  const afdeling = await loadMedarbejder()
-  // await medarbejder.find({}).toArray().then((e) => {
-  //   let antal = 0
-    
-  //   e.forEach(x => {
-  //     x.antalAlo += antal
-  //   });
-  //   let tal = antal / e.length
-  // })
-  await afdeling
+  const medarbejder = await loadMedarbejder()
+
+  await medarbejder
     .insertOne(
-       new Medarbejder({
+      new Medarbejder({
         _id: new mongoose.Types.ObjectId(),
         navn: req.body.navn,
         antal: 0,
-        antalAlo: 4,
+        antalAlo: req.body.antalAlo,
         afdeling: req.body.afdeling,
       })
     )
     .then(() => {
-      res.status(201).send("virker")
+      res.status(201).send('oprettet')
     })
     .catch((err) => {
       console.log(err)
     })
 })
 
+// update
+router.put('/', async (req, res) => {
+  const medarbejder = await loadMedarbejder()
+  var tal = "5fd2b53cf793841bd88eb446"
+  await medarbejder.findOneAndUpdate(
+    { navn: req.body.navn}, 
+    { $inc: {antal: 1, antalAlo: 1}})
+    // , antalAlo: req.body.antalAlo
+    .then(() => {
+      res.status(200).send('opdateret')
+    })
+})
+
 // Delete
 router.delete('/:id', async (req, res) => {
-  const afdeling = await loadMedarbejder()
-  await afdeling.deleteOne({ _id: new mongodb.ObjectID(req.params.id) })
+  const medarbejder = await loadMedarbejder()
+  await medarbejder.deleteOne({ _id: new mongodb.ObjectID(req.params.id) })
   res.status(200).send('slettet')
 })
 
