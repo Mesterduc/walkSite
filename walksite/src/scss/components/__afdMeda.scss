@@ -1,27 +1,42 @@
 .data {
-  .opret {
-    .medarbejder {
-      margin-bottom: 20px;
-
-      &_header {
-        font-weight: 600;
-      }
-      &_button{
-        margin-left: 10px;
-      }
-      &_dropdown {
-        margin-left: 10px;
-      }
-
+  .table {
+    &-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 15px;
     }
-
-    .afdeling {
-      &_header {
-        font-weight: 600;
-      }
-      &_button{
+  
+    // border: solid 1px black;
+    padding: 5px;
+  
+    &_header {
+      display: flex;
+      justify-content: center;
+      font-weight: 800;
+      text-transform: capitalize;
+      cursor: pointer;
+    }
+    &_col-header {
+      display: flex;
+      justify-content: space-evenly;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    &_worker {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border-bottom: solid 1px black;
+  
+      &-name {
+        text-transform: capitalize;
         margin-left: 10px;
+      }
+      &-antal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }
+  
 }

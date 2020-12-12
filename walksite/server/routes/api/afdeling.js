@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const afdeling = await loadAfdeling()
   await afdeling.deleteOne({_id: new mongodb.ObjectID(req.params.id)})
-  res.status(200).send()
+  res.status(200).send("afdeling blev slettet")
 })
 
 

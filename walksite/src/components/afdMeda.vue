@@ -2,7 +2,7 @@
   <div class="data">
     <section class="table-container">
       <div class="table" v-for="(afd, index) in afdeling" :key="index">
-        <span class="table_header"> {{ afd.navn }} </span>
+        <span class="table_header" @click="getElement(afd)"> {{ afd.navn }} </span>
         <div class="table_col-header">
           <span>navn</span>
           <span>antal</span>
@@ -44,6 +44,9 @@ export default {
       });
       return arr;
     },
+    getElement(navn){
+      this.$emit('getAfdelingNavn', navn)
+      }
   },
   async mounted() {
     await this.$store.dispatch('getAfdeling')

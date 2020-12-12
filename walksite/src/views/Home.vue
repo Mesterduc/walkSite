@@ -1,9 +1,11 @@
 <template>
   <div class="home">
-    <label for="Telefonvagt">Hvem skal blive tilbage:</label>
-    <span>{{ udvalgte }}</span>
-    <div></div>
-    <button @click="findMedarbejder">Find den heldige</button>
+    <section class="tlf-container">
+    <label for="Telefonvagt" class="tlf_header">Hvem skal blive tilbage:</label>
+    <span class="tlf_udvalgte">{{ udvalgte }}</span>
+    <button @click="findMedarbejder" class="tlf_button">Find den heldige</button>
+
+    </section>
 
     <afdelingMedarbejder />
   </div>
@@ -18,7 +20,7 @@ export default {
   name: "Home",
   data() {
     return {
-      udvalgte: "",
+      udvalgte: "?",
     };
   },
   methods: {

@@ -37,7 +37,6 @@ router.post('/', async (req, res) => {
 // update
 router.put('/', async (req, res) => {
   const medarbejder = await loadMedarbejder()
-  var tal = "5fd2b53cf793841bd88eb446"
   await medarbejder.findOneAndUpdate(
     { navn: req.body.navn}, 
     { $inc: {antal: 1, antalAlo: 1}})
@@ -52,6 +51,15 @@ router.delete('/:id', async (req, res) => {
   const medarbejder = await loadMedarbejder()
   await medarbejder.deleteOne({ _id: new mongodb.ObjectID(req.params.id) })
   res.status(200).send('slettet')
+})
+
+// Delete medarbejder når en afdeling bliver slettet
+router.delete('/', async (req, res) => {
+  const medarbejder = await loadMedarbejder()
+  await medarbejder.deleteMany({afdeling: new mongodb.ObjectID(req.body.afdeling)}).then(e => {
+    res.status(200).send("Alle medarbejder i den slettet afdeling er slettet") 
+  })
+  
 })
 
 async function loadMedarbejder() {

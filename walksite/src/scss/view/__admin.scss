@@ -1,5 +1,7 @@
 .admin {
   .opret {
+    margin-bottom: 10px;
+
     .medarbejder {
       margin-bottom: 20px;
 
@@ -22,6 +24,21 @@
       &_button{
         margin-left: 10px;
       }
+    }
+  }
+  .delete{
+    display:flex;
+    flex-direction: column;
+    width: 35%;
+
+    &_field{
+      margin-bottom: 5px;
+    }
+    &_header{
+      font-weight: 600;
+    }
+    &_button{
+      font-weight: 600;
     }
   }
 }
