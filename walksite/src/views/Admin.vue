@@ -1,11 +1,11 @@
 <template>
   <div class="admin">
+    <section class="controlle">
      <p v-if="errors.length">
     <ul>
       <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
   </p>
-  <!-- <label for="">{{afdeling}} kasodkos</label> -->
     <section class="opret">
       <section class="medarbejder">
         <label class="medarbejder_header">Opret en medarbejder</label>
@@ -44,12 +44,32 @@
         </div>
       </section>
     </section>
+    
+    <section class="redigere">
+      <section class="redigere-container">
+        <label for="" class="redigere_lbl">Navn</label>
+        <input type="text" class="redigere_inputnavn" placeholder="Navn" :value="Stats.navn">
+      </section>
+
+      <section class="redigere-container">
+        <label for="" class="redigere_lbl">Antal</label>
+        <input type="text" class="redigere_inputantal" placeholder="antal" :value="Stats.antal">
+      </section>
+
+      <section class="redigere-container">
+        <label for="" class="redigere_lbl">Afdeling</label>
+        <input type="text" class="redigere_afdeling" placeholder="afdeling" :value="Stats.afdeling">
+      </section>
+
+      <button class="redigere_button">Gem</button>
+    </section>
     <section class="delete" >
       <label class="delete_header" for="slet en afdeling">Slet en afdeling</label>
       <input class="delete_field" type="text" disabled placeholder="Tryk på en afdeling" v-model="afdelingValue.navn">
       <input class="delete_button" @click="sletAfdeling"  type="button" value="Slet">
     </section>
-     <afdelingMedarbejder @getAfdelingNavn="afdelingData"/>
+    </section>
+     <afdelingMedarbejder @getAfdelingNavn="afdelingData" @getMedarbejderStats="medarbejderData"/>
  </div>
 </template>
 <script>
@@ -74,6 +94,11 @@ export default {
         navn: "",
         id: "",
       },
+      Stats: {
+        navn: "",
+        antal: "",
+        afdeling: ""
+      }
     };
   },
   computed: {
@@ -159,6 +184,11 @@ export default {
       this.afdelingValue.navn = e.navn;
       this.afdelingValue.id = e._id;
     },
+    medarbejderData(e){
+      this.Stats.navn = e.navn
+      this.Stats.antal = e.antal
+      this.Stats.afdeling = e.afdeling
+      }
   },
   async mounted() {
     // await this.$store.dispatch('getAfdeling')

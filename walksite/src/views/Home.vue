@@ -21,6 +21,8 @@ export default {
   data() {
     return {
       udvalgte: "?",
+      
+      
     };
   },
   methods: {
@@ -56,6 +58,7 @@ export default {
       
       // e.preventDefault();
     },
+    
   },
   computed: {
     ...mapState(["afdeling", "medarbejder"]),

@@ -11,6 +11,7 @@
           class="table_worker"
           v-for="medA in findMedarbejder(afd._id)"
           :key="medA._id"
+          @click="getMedarbejder(medA)"
         >
           <span class="table_worker-name">{{ medA.navn }}</span>
           <span class="table_worker-antal">{{ medA.antal }}</span>
@@ -46,7 +47,11 @@ export default {
     },
     getElement(navn){
       this.$emit('getAfdelingNavn', navn)
-      }
+      
+      },
+    getMedarbejder(stat){
+      this.$emit('getMedarbejderStats', stat)
+    }
   },
   async mounted() {
     await this.$store.dispatch('getAfdeling')

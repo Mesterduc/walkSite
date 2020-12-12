@@ -1,44 +1,68 @@
 .admin {
-  .opret {
-    margin-bottom: 10px;
+  .controlle {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    .opret {
+      margin-bottom: 10px;
 
-    .medarbejder {
-      margin-bottom: 20px;
+      .medarbejder {
+        margin-bottom: 20px;
 
+        &_header {
+          font-weight: 600;
+        }
+        &_button {
+          margin-left: 10px;
+        }
+        &_dropdown {
+          margin-left: 10px;
+        }
+      }
+
+      .afdeling {
+        &_header {
+          font-weight: 600;
+        }
+        &_button {
+          margin-left: 10px;
+        }
+      }
+    }
+    .delete {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+
+      &_field {
+        margin-bottom: 5px;
+      }
       &_header {
         font-weight: 600;
       }
-      &_button{
-        margin-left: 10px;
-      }
-      &_dropdown {
-        margin-left: 10px;
-      }
-
-    }
-
-    .afdeling {
-      &_header {
+      &_button {
         font-weight: 600;
       }
-      &_button{
-        margin-left: 10px;
-      }
     }
-  }
-  .delete{
-    display:flex;
-    flex-direction: column;
-    width: 35%;
+    .redigere{
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      min-width: 200px;
 
-    &_field{
-      margin-bottom: 5px;
-    }
-    &_header{
-      font-weight: 600;
-    }
-    &_button{
-      font-weight: 600;
+      &-container{
+        display: flex;
+        flex-direction: column;
+      }
+      &_lbl{
+        font-weight: 600;
+      }
+
+      &_button{
+        margin-top: 20px;
+        max-height: 30px;
+
+      }
+
     }
   }
 }
