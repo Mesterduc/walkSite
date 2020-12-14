@@ -34,15 +34,39 @@ router.post('/', async (req, res) => {
     })
 })
 
-// update
+// Update
+// update den udvalgte medarbejderes statistik
 router.put('/', async (req, res) => {
   const medarbejder = await loadMedarbejder()
   await medarbejder.findOneAndUpdate(
     { navn: req.body.navn}, 
     { $inc: {antal: 1, antalAlo: 1}})
-    // , antalAlo: req.body.antalAlo
     .then(() => {
       res.status(200).send('opdateret')
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+
+// update en medarbejders info 
+router.put('/admin', async (req, res) => {
+  const medarbejder = await loadMedarbejder()
+  await medarbejder.findOneAndUpdate(
+    { _id: new mongodb.ObjectID(req.body._id)}, 
+    { 
+      $set: {
+      navn: req.body.navn,
+      antal: req.body.antal,
+      afdeling: new mongodb.ObjectID(req.body.afdeling)
+    } 
+    
+    })
+    .then((e) => {
+      res.status(200).send("Medarbejder er opdateret")
+    })
+    .catch((err) => {
+      console.log(err)
     })
 })
 

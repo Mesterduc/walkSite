@@ -57,9 +57,14 @@
         font-weight: 600;
       }
 
+      .knap{
+        display: flex;
+        justify-content: space-evenly;
+      }
       &_button{
-        margin-top: 20px;
+        margin-top: 10px;
         max-height: 30px;
+
 
       }
 

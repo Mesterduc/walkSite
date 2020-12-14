@@ -1,12 +1,12 @@
 <template>
   <div class="admin">
     <section class="controlle">
-     <p v-if="errors.length">
+     
+    <section class="opret"><p v-if="errors.length">
     <ul>
       <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
   </p>
-    <section class="opret">
       <section class="medarbejder">
         <label class="medarbejder_header">Opret en medarbejder</label>
         <form @submit="createMedarbejder" method="post">
@@ -48,20 +48,30 @@
     <section class="redigere">
       <section class="redigere-container">
         <label for="" class="redigere_lbl">Navn</label>
-        <input type="text" class="redigere_inputnavn" placeholder="Navn" :value="Stats.navn">
+        <input type="text" class="redigere_inputnavn" placeholder="Navn" v-model="Stats.navn">
       </section>
 
       <section class="redigere-container">
         <label for="" class="redigere_lbl">Antal</label>
-        <input type="text" class="redigere_inputantal" placeholder="antal" :value="Stats.antal">
+        <input type="text" class="redigere_inputantal" placeholder="antal" v-model="Stats.antal">
       </section>
 
       <section class="redigere-container">
         <label for="" class="redigere_lbl">Afdeling</label>
-        <input type="text" class="redigere_afdeling" placeholder="afdeling" :value="Stats.afdeling">
+        <select
+            class="medarbejder_dropdown"
+            v-model="Stats.afdeling"
+          >
+            <option :value="afdR._id" v-for="afdR in afdeling" :key="afdR._id">
+              {{afdR.navn}}
+              </option>
+          </select>
       </section>
+        <section class="knap">
+      <button class="redigere_button" @click="redigereMedarbejder">Gem</button>
+      <button class="redigere_button" @click="sletMedarbejder">Slet</button>
 
-      <button class="redigere_button">Gem</button>
+        </section>
     </section>
     <section class="delete" >
       <label class="delete_header" for="slet en afdeling">Slet en afdeling</label>
@@ -82,11 +92,11 @@ export default {
   data() {
     return {
       OpretAfdeling: {
-        navn: null,
+        navn: "",
       },
       OpretMedarbejder: {
-        navn: null,
-        antalAlo: null,
+        navn: "",
+        antalAlo: 0,
         afdeling: null,
       },
       errors: [],
@@ -95,10 +105,11 @@ export default {
         id: "",
       },
       Stats: {
+        _id: "",
         navn: "",
         antal: "",
-        afdeling: ""
-      }
+        afdeling: "",
+      },
     };
   },
   computed: {
@@ -115,11 +126,15 @@ export default {
       }
       if (this.errors.length == 0) {
         var antal = 0;
-        this.medarbejder.forEach((e) => {
+        if(this.medarbejder.length != 0){
+          this.medarbejder.forEach((e) => {
           antal += e.antalAlo;
         });
         antal = antal / this.medarbejder.length;
+        }
+  
         this.OpretMedarbejder.antalAlo = Math.ceil(antal);
+
         axios
           .post("http://localhost:5000/medarbejder", this.OpretMedarbejder)
           .then((resultat) => {
@@ -180,15 +195,51 @@ export default {
           });
       }
     },
+    redigereMedarbejder() {
+      if (this.Stats._id != "") {
+        axios
+          .put(`http://localhost:5000/medarbejder/admin`, {
+            _id: this.Stats._id,
+            navn: this.Stats.navn,
+            antal: this.Stats.antal,
+            afdeling: this.Stats.afdeling,
+          })
+          .then((resultat) => {
+            // // console.log(resultat);
+            this.$store.dispatch("getAfdeling");
+            this.$store.dispatch("getMedarbejder");
+            this.Stats._id = "";
+            this.Stats.navn = "";
+            this.Stats.afdeling = "";
+            this.Stats.antal = 0;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+    sletMedarbejder() {
+      axios
+        .delete(`http://localhost:5000/medarbejder/${this.Stats._id}`)
+        .then((resultat) => {
+          console.log(resultat);
+          this.$store.dispatch("getMedarbejder");
+          this.$store.dispatch("getAfdeling");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     afdelingData(e) {
       this.afdelingValue.navn = e.navn;
       this.afdelingValue.id = e._id;
     },
-    medarbejderData(e){
-      this.Stats.navn = e.navn
-      this.Stats.antal = e.antal
-      this.Stats.afdeling = e.afdeling
-      }
+    medarbejderData(e) {
+      // console.log(e.afdeling + " ad " + e._id)
+      (this.Stats._id = e._id), (this.Stats.navn = e.navn);
+      this.Stats.antal = e.antal;
+      this.Stats.afdeling = e.afdeling;
+    },
   },
   async mounted() {
     // await this.$store.dispatch('getAfdeling')
