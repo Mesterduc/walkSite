@@ -96,8 +96,9 @@ export default {
       },
       OpretMedarbejder: {
         navn: "",
+        antal: 0,
         antalAlo: 0,
-        afdeling: null,
+        afdeling: "",
       },
       errors: [],
       afdelingValue: {
@@ -117,6 +118,7 @@ export default {
   },
   methods: {
     createMedarbejder(e) {
+      e.preventDefault();
       this.errors = [];
       if (this.OpretMedarbejder.navn == null) {
         this.errors.push("Medarbejder mangler navn");
@@ -124,22 +126,28 @@ export default {
       if (this.OpretMedarbejder.afdeling == null) {
         this.errors.push("Medarbejder mangler afdeling");
       }
-      if (this.errors.length == 0) {
-        var antal = 0;
-        if(this.medarbejder.length != 0){
-          this.medarbejder.forEach((e) => {
+      this.medarbejder.forEach((e) => {
+        if (e.navn == this.OpretMedarbejder.navn) {
+          this.errors.push("Navn skal være unikt");
+        }
+      });
+
+      var antal = 0;
+      if (this.medarbejder.length != 0) {
+        this.medarbejder.forEach((e) => {
           antal += e.antalAlo;
         });
         antal = antal / this.medarbejder.length;
-        }
-  
-        this.OpretMedarbejder.antalAlo = Math.ceil(antal);
+      }
 
+      this.OpretMedarbejder.antalAlo = Math.ceil(antal);
+      if (this.errors.length == 0) {
         axios
           .post("http://localhost:5000/medarbejder", this.OpretMedarbejder)
           .then((resultat) => {
             console.log(resultat);
-            this.$store.dispatch("getMedarbejder");
+            // this.$store.dispatch("getMedarbejder");
+            this.$store.dispatch("getAfdeling");
           })
           .catch((err) => {
             console.log(err);
@@ -147,27 +155,31 @@ export default {
         this.OpretMedarbejder.navn = null;
         this.OpretMedarbejder.afdeling = null;
       }
-
-      e.preventDefault();
     },
     createAfdeling(e) {
       this.errors = [];
 
-      if (this.OpretAfdeling.navn != null) {
+      this.afdeling.forEach((e) => {
+        if (e.navn == this.OpretAfdeling.navn) {
+          this.errors.push("Afdeling navn skal være unik");
+        }
+      });
+      if (this.OpretAfdeling.navn == "") {
+        this.errors.push("Navn er tomt");
+      }
+
+      if (this.errors.length == 0) {
         axios
           .post("http://localhost:5000/afdeling", this.OpretAfdeling)
           .then((resultat) => {
-            console.log(resultat);
+            // console.log(resultat);
             this.$store.dispatch("getAfdeling");
           })
           .catch((err) => {
             console.log(err);
           });
         this.OpretAfdeling.navn = null;
-      } else {
-        this.errors.push("Navn er tomt");
       }
-
       e.preventDefault();
     },
     sletAfdeling() {
@@ -176,6 +188,7 @@ export default {
           .delete(`http://localhost:5000/afdeling/${this.afdelingValue.id}`)
           .then((resultat) => {
             console.log(resultat);
+            this.afdelingValue.navn = "";
             this.$store.dispatch("getAfdeling");
           })
           .catch((err) => {
@@ -187,7 +200,6 @@ export default {
           })
           .then((resultat) => {
             console.log(resultat);
-            this.$store.dispatch("getAfdeling");
             this.$store.dispatch("getMedarbejder");
           })
           .catch((err) => {
@@ -205,7 +217,6 @@ export default {
             afdeling: this.Stats.afdeling,
           })
           .then((resultat) => {
-            // // console.log(resultat);
             this.$store.dispatch("getAfdeling");
             this.$store.dispatch("getMedarbejder");
             this.Stats._id = "";
@@ -220,7 +231,9 @@ export default {
     },
     sletMedarbejder() {
       axios
-        .delete(`http://localhost:5000/medarbejder/${this.Stats._id}`)
+        .delete(`http://localhost:5000/medarbejder/${this.Stats._id}`, {
+          data: { id: this.Stats._id },
+        })
         .then((resultat) => {
           console.log(resultat);
           this.$store.dispatch("getMedarbejder");
@@ -235,14 +248,9 @@ export default {
       this.afdelingValue.id = e._id;
     },
     medarbejderData(e) {
-      // console.log(e.afdeling + " ad " + e._id)
-      (this.Stats._id = e._id), (this.Stats.navn = e.navn);
       this.Stats.antal = e.antal;
       this.Stats.afdeling = e.afdeling;
     },
-  },
-  async mounted() {
-    // await this.$store.dispatch('getAfdeling')
   },
   components: {
     afdelingMedarbejder,

@@ -1,45 +1,40 @@
 const express = require('express')
-const mongodb = require('mongodb')
 const Afdeling = require('../model/afdeling')
-var config = require('../../config')
-const mongoose = require('mongoose')
-
-const router = express.Router()
+const Afdelingrouter = express.Router()
 
 // Get
-router.get('/', async (req, res) => {
-  const afdeling = await loadAfdeling()
-  res.send(await afdeling.find({}).toArray())
+Afdelingrouter.get('/', async (req, res) => {
+  await Afdeling.find({}).populate('medarbejder')
+    .then((data) => {
+      res.json(data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 })
 
 // Post
-router.post('/', async (req, res) => {
-  const afdeling = await loadAfdeling()
-  await afdeling.insertOne(
-  new Afdeling({
-    _id: new mongoose.Types.ObjectId(),
-    navn: req.body.navn,
-    // medarbejder: {_id: ["he"]},
-  }))
-  res.status(201).send("virker")
+Afdelingrouter.route('/').post((req, res, next) => {
+  Afdeling.create(req.body, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
 })
 
 // Delete
-router.delete('/:id', async (req, res) => {
-  const afdeling = await loadAfdeling()
-  await afdeling.deleteOne({_id: new mongodb.ObjectID(req.params.id)})
-  res.status(200).send("afdeling blev slettet")
+Afdelingrouter.delete('/:id', async (req, res) => {
+  Afdeling.findByIdAndRemove(req.params.id, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.status(200).json({
+        msg: data,
+      })
+    }
+  })
 })
 
-
-
-async function loadAfdeling() {
-  const client = await mongodb.MongoClient.connect(config.database, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-
-  return client.db('walksite').collection('afdeling')
-}
-
-module.exports = router
+module.exports = Afdelingrouter

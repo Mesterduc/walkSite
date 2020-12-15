@@ -11,7 +11,8 @@
     </section>
     <section class="syge">
       <label for="">Frivillig</label>
-      <input type="text "  placeholder="Indsæt et navn" v-model="frivillig"/>
+      <input type="text "  placeholder="Indsæt et navn" v-model="frivillig" />
+      <button @click="frivilligGem">frivillig</button>
       <textarea
         name=""
         id=""
@@ -47,22 +48,27 @@ export default {
       var random = [];
       var tal = 1000;
       this.medarbejder.forEach((e) => {
-        if (e.antalAlo <= tal && !this.fraværende.id.includes(e._id)) {
+         if(e.antalAlo < tal){
+            random = [];
+         }
+        if (e.antalAlo <= tal && !this.fraværende.id.includes(e._id) && e.sidst != true) {
           tal = e.antalAlo;
           random.push(e);
         }
       });
       if (random.length != 0) {
-        const udvalgt = random[random.length - 1];
+        const udvalgt = random[Math.floor(Math.random() * random.length)];
         this.udvalgte = udvalgt.navn;
-        udvalgt.antal + 1;
-
+        console.log(udvalgt)
+      
         axios
           .put("http://localhost:5000/medarbejder", { navn: udvalgt.navn })
           .then((resultat) => {
             console.log(resultat);
             this.$store.dispatch("getAfdeling");
             this.$store.dispatch("getMedarbejder");
+            this.fraværende.navn = []
+            this.fraværende.id = []
           })
           .catch((err) => {
             console.log(err);
@@ -73,6 +79,18 @@ export default {
       this.fraværende.navn.push(data.navn);
       this.fraværende.id.push(data._id);
     },
+    frivilligGem(){
+      axios
+          .put("http://localhost:5000/medarbejder", { navn: this.frivillig.trim() })
+          .then((resultat) => {
+            console.log(resultat);
+            this.$store.dispatch("getAfdeling");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+          this.frivillig = ""
+    }
   },
   computed: {
     ...mapState(["afdeling", "medarbejder"]),
@@ -80,5 +98,6 @@ export default {
   components: {
     afdelingMedarbejder,
   },
+  
 };
 </script>

@@ -9,12 +9,11 @@
         </div>
         <div
           class="table_worker"
-          v-for="medA in findMedarbejder(afd._id)"
-          :key="medA._id"
-          @click="getMedarbejder(medA)"
+          v-for="(afdM, index) in afd.medarbejder" :key="index"
+          @click="getMedarbejder(afdM)"
         >
-          <span class="table_worker-name">{{ medA.navn }}</span>
-          <span class="table_worker-antal">{{ medA.antal }}</span>
+          <span class="table_worker-name">{{ afdM.navn }}</span>
+          <span class="table_worker-antal">{{ afdM.antal }}</span>
         </div>
       </div>
     </section>
@@ -33,18 +32,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(["afdeling", "medarbejder"]),
+    ...mapState(["afdeling"]),
   },
    methods: {
-    findMedarbejder: function (id) {
-      let arr = [];
-      this.medarbejder.forEach((e) => {
-        if (id == e.afdeling) {
-          arr.push(e);
-        }
-      });
-      return arr;
-    },
     getElement(navn){
       this.$emit('getAfdelingNavn', navn)
       

@@ -8,11 +8,6 @@ export default new Vuex.Store({
     afdeling: [],
     medarbejder: [],
   },
-  getters: {
-    Afdeling: (state) => {
-      return state.name;
-  }
-  },
   mutations: {
     setAfdeling(state, afdeling){
       state.afdeling = afdeling

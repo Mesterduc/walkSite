@@ -1,46 +1,41 @@
 const express = require('express')
-const mongodb = require('mongodb')
 const Medarbejder = require('../model/medarbejder')
-var config = require('../../config')
-const mongoose = require('mongoose')
-
-const router = express.Router()
+const Afdeling = require('../model/afdeling')
+const MedarbejderRouter = express.Router()
 
 // Get
-router.get('/', async (req, res) => {
-  const medarbejder = await loadMedarbejder()
-  res.send(await medarbejder.find({}).toArray())
+MedarbejderRouter.get('/', async (req, res) => {
+  await Medarbejder.find({}).populate('afdeling')
+  .then((data) => {
+    res.json(data)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 })
 
 // Post
-router.post('/', async (req, res) => {
-  const medarbejder = await loadMedarbejder()
-
-  await medarbejder
-    .insertOne(
-      new Medarbejder({
-        _id: new mongoose.Types.ObjectId(),
-        navn: req.body.navn,
-        antal: 0,
-        antalAlo: req.body.antalAlo,
-        afdeling: req.body.afdeling,
-      })
-    )
-    .then(() => {
-      res.status(201).send('oprettet')
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+MedarbejderRouter.post('/', async (req, res) => {
+  await Medarbejder.create(req.body, (err, data) => {
+    if (err) {
+      return console.log(err)
+    } else {
+      Afdeling.findByIdAndUpdate(data.afdeling._id, { $push: { medarbejder: { _id: data._id } } })
+        .then((e) => {
+          res.send(e)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  })
 })
 
 // Update
 // update den udvalgte medarbejderes statistik
-router.put('/', async (req, res) => {
-  const medarbejder = await loadMedarbejder()
-  await medarbejder.findOneAndUpdate(
-    { navn: req.body.navn}, 
-    { $inc: {antal: 1, antalAlo: 1}})
+MedarbejderRouter.put('/', async (req, res) => {
+  await Medarbejder.updateMany({sidst: false})
+  await Medarbejder.findOneAndUpdate({ navn: req.body.navn }, { $inc: { antal: 1, antalAlo: 1 }, $set: {sidst: true} })
     .then(() => {
       res.status(200).send('opdateret')
     })
@@ -49,21 +44,20 @@ router.put('/', async (req, res) => {
     })
 })
 
-// update en medarbejders info 
-router.put('/admin', async (req, res) => {
-  const medarbejder = await loadMedarbejder()
-  await medarbejder.findOneAndUpdate(
-    { _id: new mongodb.ObjectID(req.body._id)}, 
-    { 
+// update en medarbejders info
+MedarbejderRouter.put('/admin', async (req, res) => {
+  await Medarbejder.findOneAndUpdate(
+    { _id: req.body._id },
+    {
       $set: {
-      navn: req.body.navn,
-      antal: req.body.antal,
-      afdeling: new mongodb.ObjectID(req.body.afdeling)
-    } 
-    
-    })
+        navn: req.body.navn,
+        antal: req.body.antal,
+        afdeling: req.body.afdeling,
+      },
+    }
+  )
     .then((e) => {
-      res.status(200).send("Medarbejder er opdateret")
+      res.status(200).send('Medarbejder er opdateret')
     })
     .catch((err) => {
       console.log(err)
@@ -71,28 +65,23 @@ router.put('/admin', async (req, res) => {
 })
 
 // Delete
-router.delete('/:id', async (req, res) => {
-  const medarbejder = await loadMedarbejder()
-  await medarbejder.deleteOne({ _id: new mongodb.ObjectID(req.params.id) })
-  res.status(200).send('slettet')
+MedarbejderRouter.delete('/:id', async (req, res) => {
+  await Medarbejder.findByIdAndRemove(req.params.id, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.status(200).json({
+        msg: data,
+      })
+    }
+  })
 })
 
 // Delete medarbejder når en afdeling bliver slettet
-router.delete('/', async (req, res) => {
-  const medarbejder = await loadMedarbejder()
-  await medarbejder.deleteMany({afdeling: new mongodb.ObjectID(req.body.afdeling)}).then(e => {
-    res.status(200).send("Alle medarbejder i den slettet afdeling er slettet") 
+MedarbejderRouter.delete('/', async (req, res) => {
+  await Medarbejder.deleteMany({ afdeling: req.body.afdeling }).then((e) => {
+    res.status(200).send('Alle medarbejder i den slettet afdeling er slettet')
   })
-  
 })
 
-async function loadMedarbejder() {
-  const client = await mongodb.MongoClient.connect(config.database, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-
-  return client.db('walksite').collection('medarbejder')
-}
-
-module.exports = router
+module.exports = MedarbejderRouter
