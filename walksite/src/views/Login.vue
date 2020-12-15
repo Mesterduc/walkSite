@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -28,23 +30,18 @@ export default {
         brugernavn: "",
         password: "",
       },
+      auth: null,
     };
   },
   methods: {
     login() {
-      const afdeling = axios.get("http://localhost:5000/medarbejder", {
-        brugernavn: this.bruger.brugernavn.trim(),
-        password: this.bruger.password.trim(),
-      }).the;
       axios
-        .post("http://localhost:5000/login", {
-          brugernavn: this.bruger.brugernavn.trim(),
-          password: this.bruger.password.trim(),
-        })
+        .post(`http://localhost:5000/login/test`, this.bruger)
         .then((resultat) => {
-          console.log(resultat);
-          this.bruger.brugernavn = "";
-          this.bruger.password = "";
+          if (resultat.data == true) {
+            this.$store.dispatch('toggleAuth')
+            this.$router.push("/admin");
+          }
         })
         .catch((err) => {
           console.log(err);

@@ -79,6 +79,7 @@
       <input class="delete_button" @click="sletAfdeling"  type="button" value="Slet">
     </section>
     </section>
+    <label for="">{{auth}}</label>
      <afdelingMedarbejder @getAfdelingNavn="afdelingData" @getMedarbejderStats="medarbejderData"/>
  </div>
 </template>
@@ -114,7 +115,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["afdeling", "medarbejder"]),
+    ...mapState(["afdeling", "medarbejder", "auth"]),
   },
   methods: {
     createMedarbejder(e) {
@@ -251,6 +252,7 @@ export default {
       this.Stats.antal = e.antal;
       this.Stats.afdeling = e.afdeling;
     },
+    
   },
   components: {
     afdelingMedarbejder,

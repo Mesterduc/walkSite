@@ -1,4 +1,7 @@
 .home{
+&-container{
+}
+
 	.tlf{
 		&-container{
 			display: flex;
@@ -11,6 +14,20 @@
 
 		&_button{
 			width: 20%;
+		}
+	}
+	.syg{
+		&-container{
+			margin-top: 15px;
+			display: flex;
+	align-items: center;
+	justify-content: center;
+
+		}
+
+		&_textarea{
+			margin-left: 15px;
+			resize: none;
 		}
 	}
 }

@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     afdeling: [],
     medarbejder: [],
+    auth: false
   },
   mutations: {
     setAfdeling(state, afdeling){
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     setMedarbejder(state, medarbejder){
       state.medarbejder = medarbejder
+    },
+    toggleAuth: (state) =>{
+      state.auth = !state.auth
     }
   },
   actions: {
@@ -29,6 +33,9 @@ export default new Vuex.Store({
         commit('setMedarbejder', res.data)
       })
     },
+    toggleAuth({commit}) {
+      commit('toggleAuth')
+    }
     
   },
   modules: {},
