@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const loginSchema = new Schema({
   brugernavn: {type: String, required: true} ,
-  password: String ,
+  password: {type: String, required: true} ,
   // medarbejder: { type: Schema.Types.ObjectId, ref: "Medarbejder"}
 })
 
